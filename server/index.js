@@ -6,7 +6,6 @@ const cors = require("cors");
 app.use(cors());
 app.use(express.json());
 
-
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -15,58 +14,73 @@ const db = mysql.createConnection({
 });
 
 app.post("/create", (req, res) => {
-  const title = req.body.title;
-  const author = req.body.author;
-  const description = req.body.description;
-
-  db.query(
-    "INSERT INTO employees (title, author, description) VALUES (?,?,?)",
-    [title, author, description],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send("Values Inserted");
+  try {
+    const title = req.body.title;
+    const author = req.body.author;
+    const description = req.body.description;
+    db.query(
+      "INSERT INTO employees (title, author, description) VALUES (?,?,?)",
+      [title, author, description],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.send("Values Inserted");
+        }
       }
-    }
-  );
+    );
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.get("/booklist", (req, res) => {
-  db.query("SELECT * FROM employees", (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send(result);
-    }
-  });
-});
-
-app.put("/update", (req, res) => {
-  const id = req.body.id;
-  const title = req.body.title;
-  db.query(
-    "UPDATE employees SET title = ? WHERE id = ?",
-    [title, id],
-    (err, result) => {
+  try {
+    db.query("SELECT * FROM employees", (err, result) => {
       if (err) {
         console.log(err);
       } else {
         res.send(result);
       }
-    }
-  );
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.put("/update", (req, res) => {
+  try {
+    const id = req.body.id;
+    const title = req.body.title;
+    db.query(
+      "UPDATE employees SET title = ? WHERE id = ?",
+      [title, id],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.send(result);
+        }
+      }
+    );
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.delete("/delete/:id", (req, res) => {
-  const id = req.params.id;
-  db.query("DELETE FROM employees WHERE id = ?", id, (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send(result);
-    }
-  });
+  try {
+    const id = req.params.id;
+    db.query("DELETE FROM employees WHERE id = ?", id, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.listen(3006, () => {
