@@ -92,16 +92,14 @@ function App() {
           ---------------------------------------------------------
         </div>
       </div>
-      <div className="employees">
+      <div >
         {bookList.map((val, key) => {
           return (
             <div key={val.id} className="employee">
               <div>
                 <h3>Title: {val.title}</h3>
-                <p>Author: {val.author}</p>
-                <p>Description: {val.description}</p>
-              </div>
-              <div>
+                <Typography>Author: {val.author}</Typography>
+                <Typography>Description: {val.description}</Typography>
                 <TextField
                   inputProps={{ maxLength: 20 }}
                   id="outlined-multiline-static"
