@@ -28,7 +28,7 @@ app.post("/create", (req, res) => {
           if (err) {
             console.log(err);
           } else {
-            res.send("Values Inserted");
+            res.send(result);
           }
         }
       );

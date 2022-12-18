@@ -32,14 +32,17 @@ function App() {
     }
   };
 
-  const updateBook = (id) => {
+  const updateBook = (id, index) => {
     try {
       Axios.put("http://localhost:3006/update", {
-        title: edited,
-        author: editedAuthor,
-        description: editedDescription,
+        title: edited[index],
+        author: editedAuthor[index],
+        description: editedDescription[index],
         id: id,
       });
+      setTitle(edited);
+      setAuthor(editedAuthor);
+      setDescription(editedDescription);
     } catch (err) {
       console.log(err);
     }
@@ -57,11 +60,20 @@ function App() {
     try {
       Axios.get("http://localhost:3006/booklist").then((response) => {
         setBookList(response.data);
+
+        setTitle(response.data.map((val) => val.title));
+        setAuthor(response.data.map((val) => val.author));
+        setDescription(response.data.map((val) => val.description));
+
+        setEdited(response.data.map((val) => val.title));
+        setEditedAuthor(response.data.map((val) => val.author));
+        setEditedDescription(response.data.map((val) => val.description));
+
       });
     } catch (err) {
       console.log(err);
     }
-  }, [bookList, edited, editedAuthor, editedDescription]);
+  }, []);
 
   return (
     <>
@@ -88,25 +100,26 @@ function App() {
             type="text"
             onChange={(event) => setDescription(event.target.value)}
           />
-          <Button variant="contained" onClick={addBook}>Save New</Button>
+          <Button name="add" variant="contained" onClick={addBook}>Save New</Button>
           ---------------------------------------------------------
         </div>
       </div>
-      <div >
-        {bookList.map((val, key) => {
+      <div className="employees">
+        {bookList.map((val, index, key) => {
           return (
             <div key={val.id} className="employee">
               <div>
-                <h3>Title: {val.title}</h3>
-                <Typography>Author: {val.author}</Typography>
-                <Typography>Description: {val.description}</Typography>
+                <h3>Title: {title[index]}</h3>
+                <Typography>Author: {author[index]}</Typography>
+                <Typography>Description: {description[index]}</Typography>
                 <TextField
                   inputProps={{ maxLength: 20 }}
                   id="outlined-multiline-static"
                   label="Title"
                   type="text"
                   placeholder="Title"
-                  onChange={(event) => setEdited(event.target.value)}
+                  value={edited[index]}
+                  onChange={(event) => setEdited(edited.map ((val, i) => i === index ? event.target.value : val))}
                 />
                 <TextField
                   inputProps={{ maxLength: 20 }}
@@ -114,7 +127,8 @@ function App() {
                   label="Author"
                   type="text"
                   placeholder="Author"
-                  onChange={(event) => setEditedAuthor(event.target.value)}
+                  value={editedAuthor[index]}
+                  onChange={(event) => setEditedAuthor(editedAuthor.map ((val, i) => i === index ? event.target.value : val))}
                 />
                 <TextField
                   inputProps={{ maxLength: 20 }}
@@ -124,12 +138,13 @@ function App() {
                   rows={4}
                   type="text"
                   placeholder="Description"
-                  onChange={(event) => setEditedDescription(event.target.value)}
+                  value={editedDescription[index]}
+                  onChange={(event) => setEditedDescription(editedDescription.map ((val, i) => i === index ? event.target.value : val))}
                 />
                 <Button
                   variant="contained"
                   onClick={() => {
-                    updateBook(val.id);
+                    updateBook(val.id, index);
                   }}
                 >
                   Save
