@@ -26,6 +26,15 @@ function App() {
         title: title,
         author: author,
         description: description,
+      }).then((response) => {
+        setBookList([
+          ...bookList,
+          {
+            title: title,
+            author: author,
+            description: description,
+            id: response.data.insertId,
+          }])
       });
     } catch (err) {
       console.log(err);
@@ -39,10 +48,20 @@ function App() {
         author: editedAuthor[index],
         description: editedDescription[index],
         id: id,
+      }).then((response) => {
+        setBookList(
+          bookList.map((val) => {
+            return val.id === id
+              ? {
+                id: val.id,
+                title: edited[index],
+                author: editedAuthor[index],
+                description: editedDescription[index],
+              }
+              : val;
+          })
+        );
       });
-      setTitle(edited);
-      setAuthor(editedAuthor);
-      setDescription(editedDescription);
     } catch (err) {
       console.log(err);
     }
@@ -50,7 +69,14 @@ function App() {
 
   const deleteBook = (id) => {
     try {
-      Axios.delete(`http://localhost:3006/delete/${id}`);
+      Axios.delete(`http://localhost:3006/delete/${id}`).then((response) => {
+        setBookList(
+          bookList.filter((val) => {
+            return (val.id !== id
+            );
+          })
+        );
+      });
     } catch (err) {
       console.log(err);
     }
@@ -61,6 +87,7 @@ function App() {
       Axios.get("http://localhost:3006/booklist").then((response) => {
         setBookList(response.data);
 
+
         setTitle(response.data.map((val) => val.title));
         setAuthor(response.data.map((val) => val.author));
         setDescription(response.data.map((val) => val.description));
@@ -68,7 +95,6 @@ function App() {
         setEdited(response.data.map((val) => val.title));
         setEditedAuthor(response.data.map((val) => val.author));
         setEditedDescription(response.data.map((val) => val.description));
-
       });
     } catch (err) {
       console.log(err);
@@ -109,9 +135,9 @@ function App() {
           return (
             <div key={val.id} className="employee">
               <div>
-                <h3>Title: {title[index]}</h3>
-                <Typography>Author: {author[index]}</Typography>
-                <Typography>Description: {description[index]}</Typography>
+                <h3>Title: {val.title}</h3>
+                <Typography>Author: {val.author}</Typography>
+                <Typography>Description: {val.description}</Typography>
                 <TextField
                   inputProps={{ maxLength: 20 }}
                   id="outlined-multiline-static"
