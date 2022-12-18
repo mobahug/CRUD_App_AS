@@ -13,6 +13,8 @@ function App() {
 
   //updates
   const [edited, setEdited] = useState("");
+  const [editedAuthor, setEditedAuthor] = useState("");
+  const [editedDescription, setEditedDescription] = useState("");
 
   //fetch
   const [bookList, setBookList] = useState([]);
@@ -34,6 +36,8 @@ function App() {
     try {
       Axios.put("http://localhost:3006/update", {
         title: edited,
+        author: editedAuthor,
+        description: editedDescription,
         id: id,
       });
     } catch (err) {
@@ -57,7 +61,7 @@ function App() {
     } catch (err) {
       console.log(err);
     }
-  }, [bookList, edited]);
+  }, [bookList, edited, editedAuthor, editedDescription]);
 
   return (
     <>
@@ -101,13 +105,28 @@ function App() {
                 <TextField
                   inputProps={{ maxLength: 20 }}
                   id="outlined-multiline-static"
+                  label="Title"
+                  type="text"
+                  placeholder="Title"
+                  onChange={(event) => setEdited(event.target.value)}
+                />
+                <TextField
+                  inputProps={{ maxLength: 20 }}
+                  id="outlined-multiline-static"
+                  label="Author"
+                  type="text"
+                  placeholder="Author"
+                  onChange={(event) => setEditedAuthor(event.target.value)}
+                />
+                <TextField
+                  inputProps={{ maxLength: 20 }}
+                  id="outlined-multiline-static"
                   label="Description"
                   multiline
                   rows={4}
                   type="text"
-                  placeholder="New Wage"
-                  value= {val.title}
-                  onChange={(event) => setEdited(event.target.value)}
+                  placeholder="Description"
+                  onChange={(event) => setEditedDescription(event.target.value)}
                 />
                 <Button
                   variant="contained"

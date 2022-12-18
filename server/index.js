@@ -18,17 +18,21 @@ app.post("/create", (req, res) => {
     const title = req.body.title;
     const author = req.body.author;
     const description = req.body.description;
-    db.query(
-      "INSERT INTO employees (title, author, description) VALUES (?,?,?)",
-      [title, author, description],
-      (err, result) => {
-        if (err) {
-          console.log(err);
-        } else {
-          res.send("Values Inserted");
+    if (title.length > 20 || author.length > 20 || description.length > 20) {
+      return;
+    } else {
+      db.query(
+        "INSERT INTO employees (title, author, description) VALUES (?,?,?)",
+        [title, author, description],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+          } else {
+            res.send("Values Inserted");
+          }
         }
-      }
-    );
+      );
+    }
   } catch (err) {
     console.log(err);
   }
@@ -52,9 +56,13 @@ app.put("/update", (req, res) => {
   try {
     const id = req.body.id;
     const title = req.body.title;
+    const author = req.body.author;
+    const description = req.body.description;
+    if (title.length > 20 || author.length > 20 || description.length > 20)
+      return;
     db.query(
-      "UPDATE employees SET title = ? WHERE id = ?",
-      [title, id],
+      "UPDATE employees SET title = ?, author = ?, description = ? WHERE id = ?",
+      [title, author, description, id],
       (err, result) => {
         if (err) {
           console.log(err);
