@@ -24,7 +24,7 @@ function App() {
   //fetch
   const [bookList, setBookList] = useState([]);
 
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItems, setSelectedItems] = useState([]);
   const [showMore, setShowMore] = useState(false);
 
   //sending values to the backend database
@@ -165,6 +165,9 @@ function App() {
             variant="outlined"
             label="Description"
             placeholder="Add Description..."
+            id="outlined-multiline-static"
+            multiline
+            rows={4}
             inputProps={{ maxLength: 20 }}
             required
             type="text"
@@ -175,28 +178,52 @@ function App() {
           </Button>
         </Box>
       </Box>
-      <div className="employees">
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          marginTop: 2,
+        }}
+      >
         {bookList.map((val, index, key) => {
           return (
-            <div key={val.id} className="employee">
-              <div>
+            <Box key={val.id} className="employee">
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  width: "100%",
+                  maxWidth: "330px",
+                  margin: "auto",
+                  padding: 2,
+                  border: "1px solid #eaeaea",
+                  borderRadius: 2,
+                  bgcolor: "background.paper",
+                }}
+              >
                 <h3>Title: {val.title}</h3>
                 <Typography>Author: {val.author}</Typography>
 
                 <FormControlLabel
                   control={
                     <Switch
-                      
-                      onClick={() => {
-                        setSelectedItem(val.id);
-                        setShowMore(!showMore);
-                      }}
+                    onClick={() => {
+                      // Toggle the selected state of the item
+                      if (selectedItems.includes(val.id)) {
+                        setSelectedItems(selectedItems.filter(id => id !== val.id));
+                        setShowMore(true);
+                      } else {
+                        setSelectedItems([...selectedItems, val.id]);
+                      }
+                    }}
                     />
                   }
                   label="Show"
                 />
                 <Box sx={{ display: "flex" }}>
-                  {selectedItem === val.id && showMore &&
+                {selectedItems.includes(val.id) && (
                     <Fade in={showMore}>
                       <Box>
                         <Typography>Description: {val.description}</Typography>
@@ -268,13 +295,13 @@ function App() {
                         </Button>
                       </Box>
                     </Fade>
-                  }
+                  )}
                 </Box>
-              </div>
-            </div>
+              </Box>
+            </Box>
           );
         })}
-      </div>
+      </Box>
     </>
   );
 }
