@@ -193,7 +193,15 @@ function App() {
       >
         {bookList.map((val, index, key) => {
           return (
-            <Box key={val.id}>
+            <Box
+              key={val.id}
+              style={{
+                whiteSpace: "pre-line",
+                overflowWrap: "break-word",
+                wordWrap: "break-word",
+                hyphens: "auto",
+              }}
+            >
               <Box
                 sx={{
                   display: "flex",
@@ -209,10 +217,15 @@ function App() {
                   marginBottom: 2,
                 }}
               >
-                <h3>Title: {val.title}</h3>
-                <Typography>Author: {val.author}</Typography>
+                <Typography sx={{ typography: "body1", fontSize: "20px" }}>
+                  Title: <b>{val.title}</b>
+                </Typography>
+                <Typography sx={{ typography: "subtitle2" }}>
+                  Author: {val.author}
+                </Typography>
 
                 <FormControlLabel
+                  sx={{ color: 'text.secondary' }}
                   control={
                     <Switch
                       checked={selectedItems.includes(val.id)}
