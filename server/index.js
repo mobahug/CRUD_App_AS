@@ -18,7 +18,7 @@ app.post("/create", (req, res) => {
     const title = req.body.title;
     const author = req.body.author;
     const description = req.body.description;
-    if (title.length > 20 || author.length > 20 || description.length > 20) {
+    if (title.length > 20 || author.length > 20 || description.length > 200) {
       return;
     } else {
       db.query(
@@ -58,7 +58,7 @@ app.put("/update", (req, res) => {
     const title = req.body.title;
     const author = req.body.author;
     const description = req.body.description;
-    if (title.length > 20 || author.length > 20 || description.length > 20)
+    if (title.length > 20 || author.length > 20 || description.length > 200)
       return;
     db.query(
       "UPDATE employees SET title = ?, author = ?, description = ? WHERE id = ?",

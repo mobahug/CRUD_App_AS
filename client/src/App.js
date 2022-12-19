@@ -169,13 +169,14 @@ function App() {
             variant="outlined"
             label="Description"
             placeholder="Add Description..."
-            id="outlined-multiline-static"
+            id="outlined-multiline-flexible"
             multiline
-            rows={4}
-            inputProps={{ maxLength: 20 }}
+            maxRows={4}
+            inputProps={{ maxLength: 200 }}
             required
             type="text"
             onChange={(event) => setDescription(event.target.value)}
+            helperText="Max 200 characters"
           />
           <Button name="add" variant="contained" onClick={addBook}>
             Save New
@@ -224,7 +225,6 @@ function App() {
                           setShowMore(true);
                         } else {
                           setSelectedItems([...selectedItems, val.id]);
-
                         }
                       }}
                     />
@@ -278,11 +278,11 @@ function App() {
                           sx={{ marginBottom: 2 }}
                           fullWidth
                           variant="outlined"
-                          inputProps={{ maxLength: 20 }}
-                          id="outlined-multiline-static"
+                          inputProps={{ maxLength: 200 }}
+                          id="outlined-multiline-flexible"
                           label="Description"
                           multiline
-                          rows={4}
+                          maxRows={4}
                           type="text"
                           placeholder="Description"
                           value={editedDescription[index]}
@@ -293,6 +293,7 @@ function App() {
                               )
                             )
                           }
+                          helperText="Max 200 characters"
                         />
                         <Button
                           sx={{ marginBottom: 2 }}
