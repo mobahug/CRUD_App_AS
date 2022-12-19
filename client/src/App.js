@@ -5,6 +5,11 @@ import Axios from "axios";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+
+import Switch from "@mui/material/Switch";
+import Fade from "@mui/material/Fade";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 function App() {
   const [title, setTitle] = useState("");
@@ -18,6 +23,9 @@ function App() {
 
   //fetch
   const [bookList, setBookList] = useState([]);
+
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showMore, setShowMore] = useState(false);
 
   //sending values to the backend database
   const addBook = () => {
@@ -34,7 +42,8 @@ function App() {
             author: author,
             description: description,
             id: response.data.insertId,
-          }])
+          },
+        ]);
       });
     } catch (err) {
       console.log(err);
@@ -53,11 +62,11 @@ function App() {
           bookList.map((val) => {
             return val.id === id
               ? {
-                id: val.id,
-                title: edited[index],
-                author: editedAuthor[index],
-                description: editedDescription[index],
-              }
+                  id: val.id,
+                  title: edited[index],
+                  author: editedAuthor[index],
+                  description: editedDescription[index],
+                }
               : val;
           })
         );
@@ -72,8 +81,7 @@ function App() {
       Axios.delete(`http://localhost:3006/delete/${id}`).then((response) => {
         setBookList(
           bookList.filter((val) => {
-            return (val.id !== id
-            );
+            return val.id !== id;
           })
         );
       });
@@ -86,7 +94,6 @@ function App() {
     try {
       Axios.get("http://localhost:3006/booklist").then((response) => {
         setBookList(response.data);
-
 
         setTitle(response.data.map((val) => val.title));
         setAuthor(response.data.map((val) => val.author));
@@ -103,33 +110,71 @@ function App() {
 
   return (
     <>
-      <div className="App">
-        <div className="information">
-          <Typography>Title</Typography>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          marginTop: 2,
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            width: "100%",
+            maxWidth: "330px",
+            margin: "auto",
+            padding: 2,
+            border: "1px solid #eaeaea",
+            borderRadius: 2,
+            bgcolor: "background.paper",
+          }}
+        >
+          <Typography
+            sx={{ textAlign: "center" }}
+            variant="h4"
+            component="h2"
+            gutterBottom
+          >
+            Add New Book
+          </Typography>
           <TextField
+            sx={{ marginBottom: 2 }}
+            variant="outlined"
+            label="Title"
+            placeholder="Add Title..."
             inputProps={{ maxLength: 20 }}
             required
             type="text"
             onChange={(event) => setTitle(event.target.value)}
           />
-          <Typography>Author</Typography>
           <TextField
+            sx={{ marginBottom: 2 }}
+            variant="outlined"
+            label="Author"
+            placeholder="Add Author..."
             inputProps={{ maxLength: 20 }}
             required
             type="text"
             onChange={(event) => setAuthor(event.target.value)}
           />
-          <Typography>Description</Typography>
           <TextField
+            sx={{ marginBottom: 2 }}
+            variant="outlined"
+            label="Description"
+            placeholder="Add Description..."
             inputProps={{ maxLength: 20 }}
             required
             type="text"
             onChange={(event) => setDescription(event.target.value)}
           />
-          <Button name="add" variant="contained" onClick={addBook}>Save New</Button>
-          ---------------------------------------------------------
-        </div>
-      </div>
+          <Button name="add" variant="contained" onClick={addBook}>
+            Save New
+          </Button>
+        </Box>
+      </Box>
       <div className="employees">
         {bookList.map((val, index, key) => {
           return (
@@ -137,52 +182,94 @@ function App() {
               <div>
                 <h3>Title: {val.title}</h3>
                 <Typography>Author: {val.author}</Typography>
-                <Typography>Description: {val.description}</Typography>
-                <TextField
-                  inputProps={{ maxLength: 20 }}
-                  id="outlined-multiline-static"
-                  label="Title"
-                  type="text"
-                  placeholder="Title"
-                  value={edited[index]}
-                  onChange={(event) => setEdited(edited.map ((val, i) => i === index ? event.target.value : val))}
+
+                <FormControlLabel
+                  control={
+                    <Switch
+                      
+                      onClick={() => {
+                        setSelectedItem(val.id);
+                        setShowMore(!showMore);
+                      }}
+                    />
+                  }
+                  label="Show"
                 />
-                <TextField
-                  inputProps={{ maxLength: 20 }}
-                  id="outlined-multiline-static"
-                  label="Author"
-                  type="text"
-                  placeholder="Author"
-                  value={editedAuthor[index]}
-                  onChange={(event) => setEditedAuthor(editedAuthor.map ((val, i) => i === index ? event.target.value : val))}
-                />
-                <TextField
-                  inputProps={{ maxLength: 20 }}
-                  id="outlined-multiline-static"
-                  label="Description"
-                  multiline
-                  rows={4}
-                  type="text"
-                  placeholder="Description"
-                  value={editedDescription[index]}
-                  onChange={(event) => setEditedDescription(editedDescription.map ((val, i) => i === index ? event.target.value : val))}
-                />
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    updateBook(val.id, index);
-                  }}
-                >
-                  Save
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    deleteBook(val.id);
-                  }}
-                >
-                  Delete
-                </Button>
+                <Box sx={{ display: "flex" }}>
+                  {selectedItem === val.id && showMore &&
+                    <Fade in={showMore}>
+                      <Box>
+                        <Typography>Description: {val.description}</Typography>
+                        <TextField
+                          variant="outlined"
+                          inputProps={{ maxLength: 20 }}
+                          id="outlined-multiline-static"
+                          label="Title"
+                          type="text"
+                          placeholder="Title"
+                          value={edited[index]}
+                          onChange={(event) =>
+                            setEdited(
+                              edited.map((val, i) =>
+                                i === index ? event.target.value : val
+                              )
+                            )
+                          }
+                        />
+                        <TextField
+                          variant="outlined"
+                          inputProps={{ maxLength: 20 }}
+                          id="outlined-multiline-static"
+                          label="Author"
+                          type="text"
+                          placeholder="Author"
+                          value={editedAuthor[index]}
+                          onChange={(event) =>
+                            setEditedAuthor(
+                              editedAuthor.map((val, i) =>
+                                i === index ? event.target.value : val
+                              )
+                            )
+                          }
+                        />
+                        <TextField
+                          variant="outlined"
+                          inputProps={{ maxLength: 20 }}
+                          id="outlined-multiline-static"
+                          label="Description"
+                          multiline
+                          rows={4}
+                          type="text"
+                          placeholder="Description"
+                          value={editedDescription[index]}
+                          onChange={(event) =>
+                            setEditedDescription(
+                              editedDescription.map((val, i) =>
+                                i === index ? event.target.value : val
+                              )
+                            )
+                          }
+                        />
+                        <Button
+                          variant="contained"
+                          onClick={() => {
+                            updateBook(val.id, index);
+                          }}
+                        >
+                          Save
+                        </Button>
+                        <Button
+                          variant="contained"
+                          onClick={() => {
+                            deleteBook(val.id);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </Box>
+                    </Fade>
+                  }
+                </Box>
               </div>
             </div>
           );
