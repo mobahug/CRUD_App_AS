@@ -6,10 +6,15 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
 import Switch from "@mui/material/Switch";
 import Fade from "@mui/material/Fade";
 import FormControlLabel from "@mui/material/FormControlLabel";
+
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 
 // import { EventListener } from '@material-ui/core';
 
@@ -30,6 +35,13 @@ function App() {
   //checkbox toggle
   const [selectedItems, setSelectedItems] = useState([]);
   const [showMore, setShowMore] = useState(false);
+
+  const styles = {
+    largeIcon: {
+      width: 40,
+      height: 40,
+    },
+  };
 
   //sending values to the backend database
   const addBook = () => {
@@ -82,13 +94,18 @@ function App() {
 
   const deleteBook = (id) => {
     try {
-      Axios.delete(`http://localhost:3006/delete/${id}`).then((response) => {
-        setBookList(
-          bookList.filter((val) => {
-            return val.id !== id;
-          })
-        );
-      });
+      const confirm = window.confirm(
+        "Are you sure you want to delete this book?"
+      );
+      if (confirm) {
+        Axios.delete(`http://localhost:3006/delete/${id}`).then((response) => {
+          setBookList(
+            bookList.filter((val) => {
+              return val.id !== id;
+            })
+          );
+        });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -137,12 +154,16 @@ function App() {
           }}
         >
           <Typography
-            sx={{ textAlign: "center" }}
+            sx={{ textAlign: "center", color: "primary.main" }}
             variant="h4"
             component="h2"
             gutterBottom
           >
-            Add New Book
+            Add New Book{" "}
+            <BookmarkBorderIcon
+              style={styles.largeIcon}
+              sx={{ marginBottom: -1 }}
+            />
           </Typography>
           <TextField
             sx={{ marginBottom: 2 }}
@@ -218,14 +239,32 @@ function App() {
                 }}
               >
                 <Typography sx={{ typography: "body1", fontSize: "20px" }}>
-                  Title: <b>{val.title}</b>
+                  Title: <b>{val.title} </b>
                 </Typography>
+                <Box position="relative">
+                  <Tooltip title="Saved">
+                    <IconButton
+                      edge="end"
+                      style={{
+                        position: "absolute",
+                        left: "280px",
+                        bottom: "10px",
+                        zIndex: 1,
+                      }}
+                    >
+                      <BookmarkIcon
+                        sx={{ color: "primary.main" }}
+                        style={styles.largeIcon}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
                 <Typography sx={{ typography: "subtitle2" }}>
                   Author: {val.author}
                 </Typography>
 
                 <FormControlLabel
-                  sx={{ color: 'text.secondary' }}
+                  sx={{ color: "text.secondary" }}
                   control={
                     <Switch
                       checked={selectedItems.includes(val.id)}
@@ -336,6 +375,19 @@ function App() {
             </Box>
           );
         })}
+      </Box>
+      <Box sx={{ pt: "5vh", pb: "20vh", textAlign: "center" }}>
+        <Typography>
+          &nbsp;&nbsp; Created by &nbsp;
+          <a
+            style={{ textDecoration: "none", color: "inherit" }}
+            href="https://github.com/mobahug"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <b>ghorvath</b>
+          </a>
+        </Typography>
       </Box>
     </>
   );
