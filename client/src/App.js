@@ -11,7 +11,10 @@ import Switch from "@mui/material/Switch";
 import Fade from "@mui/material/Fade";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
+// import { EventListener } from '@material-ui/core';
+
 function App() {
+  //add
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [description, setDescription] = useState("");
@@ -24,6 +27,7 @@ function App() {
   //fetch
   const [bookList, setBookList] = useState([]);
 
+  //checkbox toggle
   const [selectedItems, setSelectedItems] = useState([]);
   const [showMore, setShowMore] = useState(false);
 
@@ -188,7 +192,7 @@ function App() {
       >
         {bookList.map((val, index, key) => {
           return (
-            <Box key={val.id} className="employee">
+            <Box key={val.id}>
               <Box
                 sx={{
                   display: "flex",
@@ -201,6 +205,7 @@ function App() {
                   border: "1px solid #eaeaea",
                   borderRadius: 2,
                   bgcolor: "background.paper",
+                  marginBottom: 2,
                 }}
               >
                 <h3>Title: {val.title}</h3>
@@ -209,25 +214,33 @@ function App() {
                 <FormControlLabel
                   control={
                     <Switch
-                    onClick={() => {
-                      // Toggle the selected state of the item
-                      if (selectedItems.includes(val.id)) {
-                        setSelectedItems(selectedItems.filter(id => id !== val.id));
-                        setShowMore(true);
-                      } else {
-                        setSelectedItems([...selectedItems, val.id]);
-                      }
-                    }}
+                      checked={selectedItems.includes(val.id)}
+                      onClick={() => {
+                        // Toggle the selected state of the item
+                        if (selectedItems.includes(val.id)) {
+                          setSelectedItems(
+                            selectedItems.filter((id) => id !== val.id)
+                          );
+                          setShowMore(true);
+                        } else {
+                          setSelectedItems([...selectedItems, val.id]);
+
+                        }
+                      }}
                     />
                   }
-                  label="Show"
+                  label="Show More"
                 />
                 <Box sx={{ display: "flex" }}>
-                {selectedItems.includes(val.id) && (
-                    <Fade in={showMore}>
+                  {selectedItems.includes(val.id) && (
+                    <Fade in={selectedItems.includes(val.id)}>
                       <Box>
-                        <Typography>Description: {val.description}</Typography>
+                        <Typography sx={{ marginBottom: 2 }}>
+                          Description: {val.description}
+                        </Typography>
                         <TextField
+                          sx={{ marginBottom: 2 }}
+                          fullWidth
                           variant="outlined"
                           inputProps={{ maxLength: 20 }}
                           id="outlined-multiline-static"
@@ -244,6 +257,8 @@ function App() {
                           }
                         />
                         <TextField
+                          sx={{ marginBottom: 2 }}
+                          fullWidth
                           variant="outlined"
                           inputProps={{ maxLength: 20 }}
                           id="outlined-multiline-static"
@@ -260,6 +275,8 @@ function App() {
                           }
                         />
                         <TextField
+                          sx={{ marginBottom: 2 }}
+                          fullWidth
                           variant="outlined"
                           inputProps={{ maxLength: 20 }}
                           id="outlined-multiline-static"
@@ -278,6 +295,8 @@ function App() {
                           }
                         />
                         <Button
+                          sx={{ marginBottom: 2 }}
+                          fullWidth
                           variant="contained"
                           onClick={() => {
                             updateBook(val.id, index);
@@ -286,6 +305,8 @@ function App() {
                           Save
                         </Button>
                         <Button
+                          sx={{ marginBottom: 2 }}
+                          fullWidth
                           variant="contained"
                           onClick={() => {
                             deleteBook(val.id);
