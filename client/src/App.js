@@ -129,18 +129,15 @@ function App() {
       Axios.get("http://localhost:3006/booklist").then((response) => {
         setBookList(response.data);
 
-        setTitle(response.data.map((val) => val.title));
-        setAuthor(response.data.map((val) => val.author));
-        setDescription(response.data.map((val) => val.description));
-
         const editedObject = {};
         const editedAuthorObject = {};
         const editedDescriptionObject = {};
+
         response.data.forEach((value) => {
           editedObject[value.id] = value.title;
           editedAuthorObject[value.id] = value.author;
           editedDescriptionObject[value.id] = value.description;
-        })
+        });
 
         setEdited(editedObject);
         setEditedAuthor(editedAuthorObject);
@@ -150,10 +147,6 @@ function App() {
       console.log(err);
     }
   }, []);
-
-  useEffect(() => {
-    console.log(edited);
-  });
 
   return (
     <>
@@ -223,7 +216,7 @@ function App() {
             required
             type="text"
             onChange={(event) => setDescription(event.target.value)}
-            helperText="Max 200 characters"
+            helperText={`Max ${description.length}/200 characters`}
           />
           <Button name="add" variant="contained" onClick={addBook}>
             Save New
