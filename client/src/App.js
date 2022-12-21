@@ -51,6 +51,18 @@ function App() {
         author: author,
         description: description,
       }).then((response) => {
+        setEdited({
+          ...edited,
+          [response.data.insertId]: title,
+        });
+        setEditedAuthor({
+          ...editedAuthor,
+          [response.data.insertId]: author,
+        });
+        setEditedDescription({
+          ...editedDescription,
+          [response.data.insertId]: description,
+        });
         setBookList([
           ...bookList,
           {
@@ -60,18 +72,19 @@ function App() {
             id: response.data.insertId,
           },
         ]);
+
       });
     } catch (err) {
       console.log(err);
     }
   };
 
-  const updateBook = (id, index) => {
+  const updateBook = (id) => {
     try {
       Axios.put("http://localhost:3006/update", {
-        title: edited[index],
-        author: editedAuthor[index],
-        description: editedDescription[index],
+        title: edited[id],
+        author: editedAuthor[id],
+        description: editedDescription[id],
         id: id,
       }).then((response) => {
         setBookList(
@@ -79,9 +92,9 @@ function App() {
             return val.id === id
               ? {
                   id: val.id,
-                  title: edited[index],
-                  author: editedAuthor[index],
-                  description: editedDescription[index],
+                  title: edited[id],
+                  author: editedAuthor[id],
+                  description: editedDescription[id],
                 }
               : val;
           })
@@ -120,14 +133,27 @@ function App() {
         setAuthor(response.data.map((val) => val.author));
         setDescription(response.data.map((val) => val.description));
 
-        setEdited(response.data.map((val) => val.title));
-        setEditedAuthor(response.data.map((val) => val.author));
-        setEditedDescription(response.data.map((val) => val.description));
+        const editedObject = {};
+        const editedAuthorObject = {};
+        const editedDescriptionObject = {};
+        response.data.forEach((value) => {
+          editedObject[value.id] = value.title;
+          editedAuthorObject[value.id] = value.author;
+          editedDescriptionObject[value.id] = value.description;
+        })
+
+        setEdited(editedObject);
+        setEditedAuthor(editedAuthorObject);
+        setEditedDescription(editedDescriptionObject);
       });
     } catch (err) {
       console.log(err);
     }
   }, []);
+
+  useEffect(() => {
+    console.log(edited);
+  });
 
   return (
     <>
@@ -212,7 +238,7 @@ function App() {
           marginTop: 2,
         }}
       >
-        {bookList.map((val, index, key) => {
+        {bookList.map((val) => {
           return (
             <Box
               key={val.id}
@@ -299,13 +325,13 @@ function App() {
                           label="Title"
                           type="text"
                           placeholder="Title"
-                          value={edited[index]}
-                          onChange={(event) =>
-                            setEdited(
-                              edited.map((val, i) =>
-                                i === index ? event.target.value : val
-                              )
-                            )
+                          value={edited[val.id]}
+                          onChange={(event) => {
+                            setEdited({
+                              ...edited,
+                              [val.id]: event.target.value,
+                            });
+                          }
                           }
                         />
                         <TextField
@@ -317,14 +343,13 @@ function App() {
                           label="Author"
                           type="text"
                           placeholder="Author"
-                          value={editedAuthor[index]}
-                          onChange={(event) =>
-                            setEditedAuthor(
-                              editedAuthor.map((val, i) =>
-                                i === index ? event.target.value : val
-                              )
-                            )
-                          }
+                          value={editedAuthor[val.id]}
+                          onChange={(event) => {
+                            setEditedAuthor({
+                              ...editedAuthor,
+                              [val.id]: event.target.value,
+                            });
+                          }}
                         />
                         <TextField
                           sx={{ marginBottom: 2 }}
@@ -337,14 +362,13 @@ function App() {
                           maxRows={4}
                           type="text"
                           placeholder="Description"
-                          value={editedDescription[index]}
-                          onChange={(event) =>
-                            setEditedDescription(
-                              editedDescription.map((val, i) =>
-                                i === index ? event.target.value : val
-                              )
-                            )
-                          }
+                          value={editedDescription[val.id]}
+                          onChange={(event) => {
+                            setEditedDescription({
+                              ...editedDescription,
+                              [val.id]: event.target.value,
+                            });
+                          }}
                           helperText="Max 200 characters"
                         />
                         <Button
@@ -352,7 +376,7 @@ function App() {
                           fullWidth
                           variant="contained"
                           onClick={() => {
-                            updateBook(val.id, index);
+                            updateBook(val.id);
                           }}
                         >
                           Save
