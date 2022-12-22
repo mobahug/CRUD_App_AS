@@ -128,10 +128,6 @@ function App() {
 
   const deleteBook = (id) => {
     try {
-      // const confirm = window.confirm(
-      //   "Are you sure you want to delete this book?"
-      // );
-      // if (confirm) {
         Axios.delete(`http://localhost:3006/delete/${id}`).then((response) => {
           setBookList(
             bookList.filter((val) => {
