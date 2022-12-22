@@ -18,9 +18,8 @@ app.post("/create", (req, res) => {
     const title = req.body.title;
     const author = req.body.author;
     const description = req.body.description;
-    console.log(typeof title)
-    if (title == '' || author == '' || description == '')
-      return;
+    console.log(typeof title);
+    if (title == "" || author == "" || description == "") return;
     if (title.length > 20 || author.length > 20 || description.length > 200) {
       return;
     } else {
@@ -62,6 +61,7 @@ app.put("/update", (req, res) => {
     const title = req.body.title;
     const author = req.body.author;
     const description = req.body.description;
+    if (title == "" || author == "" || description == "") return;
     if (title.length > 20 || author.length > 20 || description.length > 200)
       return;
     db.query(
@@ -77,6 +77,7 @@ app.put("/update", (req, res) => {
     );
   } catch (err) {
     console.log(err);
+    res.send(400).json({ err: err });
   }
 });
 

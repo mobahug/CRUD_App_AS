@@ -133,8 +133,10 @@ function App() {
           })
         );
       });
+      setSuccess(true);
     } catch (err) {
       console.log(err);
+      setError(true);
     }
   };
 
@@ -346,6 +348,12 @@ function App() {
                         <Typography sx={{ marginBottom: 2 }}>
                           Description: {val.description}
                         </Typography>
+                        {error && (
+                          <Alert sx={{marginBottom: 2}} severity="error">Please fill in all fields!</Alert>
+                        )}
+                        {success && (
+                          <Alert sx={{marginBottom: 2}} severity="success">Book edited successfully!</Alert>
+                        )}
                         <TextField
                           sx={{ marginBottom: 2 }}
                           fullWidth
