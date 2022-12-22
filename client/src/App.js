@@ -1,5 +1,6 @@
 import "./App.css";
 import { useState, useEffect } from "react";
+import * as React from "react";
 import Axios from "axios";
 
 import Typography from "@mui/material/Typography";
@@ -16,9 +17,30 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+
 // import { EventListener } from '@material-ui/core';
 
 function App() {
+  //popup on delete
+  const [open, setOpen] = React.useState(false);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   //add
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -72,7 +94,6 @@ function App() {
             id: response.data.insertId,
           },
         ]);
-
       });
     } catch (err) {
       console.log(err);
@@ -107,10 +128,10 @@ function App() {
 
   const deleteBook = (id) => {
     try {
-      const confirm = window.confirm(
-        "Are you sure you want to delete this book?"
-      );
-      if (confirm) {
+      // const confirm = window.confirm(
+      //   "Are you sure you want to delete this book?"
+      // );
+      // if (confirm) {
         Axios.delete(`http://localhost:3006/delete/${id}`).then((response) => {
           setBookList(
             bookList.filter((val) => {
@@ -118,7 +139,8 @@ function App() {
             })
           );
         });
-      }
+      // }
+      setOpen(false);
     } catch (err) {
       console.log(err);
     }
@@ -324,8 +346,7 @@ function App() {
                               ...edited,
                               [val.id]: event.target.value,
                             });
-                          }
-                          }
+                          }}
                         />
                         <TextField
                           sx={{ marginBottom: 2 }}
@@ -366,6 +387,7 @@ function App() {
                         />
                         <Button
                           sx={{ marginBottom: 2 }}
+                          autoFocus
                           fullWidth
                           variant="contained"
                           onClick={() => {
@@ -377,13 +399,40 @@ function App() {
                         <Button
                           sx={{ marginBottom: 2 }}
                           fullWidth
-                          variant="contained"
-                          onClick={() => {
-                            deleteBook(val.id);
-                          }}
+                          variant="outlined"
+                          onClick={handleClickOpen}
                         >
                           Delete
                         </Button>
+                        <Dialog
+                          fullScreen={fullScreen}
+                          open={open}
+                          onClose={handleClose}
+                          aria-labelledby="responsive-dialog-title"
+                        >
+                          <DialogTitle id="responsive-dialog-title">
+                            {`Are you sure you want to delete ${val.title} book?`}
+                          </DialogTitle>
+                          <DialogContent>
+                            <DialogContentText>
+                              This action cannot be undone.
+                            </DialogContentText>
+                          </DialogContent>
+                          <DialogActions>
+                            <Button variant="contained" autoFocus onClick={handleClose}>
+                              CANCEL
+                            </Button>
+                            <Button
+
+                              variant="outlined"
+                              onClick={() => {
+                                deleteBook(val.id);
+                              }}
+                            >
+                              DELETE
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
                       </Box>
                     </Fade>
                   )}
