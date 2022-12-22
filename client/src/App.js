@@ -25,7 +25,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 
-// import { EventListener } from '@material-ui/core';
+import Alert from "@mui/material/Alert";
 
 function App() {
   //popup on delete
@@ -57,6 +57,12 @@ function App() {
   //checkbox toggle
   const [selectedItems, setSelectedItems] = useState([]);
   const [showMore, setShowMore] = useState(false);
+
+  //error message
+  const [error, setError] = useState(false);
+
+  //success message
+  const [success, setSuccess] = useState(false);
 
   const styles = {
     largeIcon: {
@@ -95,8 +101,14 @@ function App() {
           },
         ]);
       });
+      if (title === "" || author === "" || description === "") {
+        setError(true);
+      } else {
+        setSuccess(true);
+      }
     } catch (err) {
       console.log(err);
+      setError(true);
     }
   };
 
@@ -163,6 +175,7 @@ function App() {
       });
     } catch (err) {
       console.log(err);
+      setError(true);
     }
   }, []);
 
@@ -202,6 +215,12 @@ function App() {
               sx={{ marginBottom: -1 }}
             />
           </Typography>
+          {error && (
+            <Alert sx={{marginBottom: 2}} severity="error">Please fill in all fields!</Alert>
+          )}
+          {success && (
+            <Alert sx={{marginBottom: 2}} severity="success">Book added successfully!</Alert>
+          )}
           <TextField
             sx={{ marginBottom: 2 }}
             variant="outlined"

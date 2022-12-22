@@ -18,6 +18,9 @@ app.post("/create", (req, res) => {
     const title = req.body.title;
     const author = req.body.author;
     const description = req.body.description;
+    console.log(typeof title)
+    if (title == '' || author == '' || description == '')
+      return;
     if (title.length > 20 || author.length > 20 || description.length > 200) {
       return;
     } else {
@@ -27,6 +30,7 @@ app.post("/create", (req, res) => {
         (err, result) => {
           if (err) {
             console.log(err);
+            res.send({ err: err });
           } else {
             res.send(result);
           }
