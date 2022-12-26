@@ -6,7 +6,7 @@
   web application should have a UI consisting of a single HTML web page, and a simple
   backend. The backend provides a REST API with which the UI communicates. We want the
   application to have the following features:
-  
+
     1. When the web page is loaded, it fetches all the books to a list. The title and the
         author of each book are displayed in the list.
     2. When a book in the list is clicked, it is selected and its author, title and description are
@@ -20,33 +20,21 @@
     6. All the changes that user has made to the collection must be preserved on a page
         reload.
     7. The application (front and backend) can be started with a single command in terminal
-    
-    
-    
+
+
+
 ## How to use it
 
   After cloning the repository
-  
-      cd client/
-      
-  then
-  
-      npm start
-      
-  On another terminal got to:
-  
-      cd server/
-      
-  then
-  
-      node index.js
-      
-      
-Open in browser 
+
+    make start
+
+
+Open in browser
 
       http://localhost:3000/
-      
-      
+
+
 ### Installation documentation:
 
     npm create-react-app
