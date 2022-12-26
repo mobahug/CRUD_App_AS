@@ -105,6 +105,10 @@ function App() {
         setError(true);
       } else {
         setSuccess(true);
+        //clearing the input fields
+        setTitle("");
+        setAuthor("");
+        setDescription("");
       }
     } catch (err) {
       console.log(err);
@@ -142,13 +146,13 @@ function App() {
 
   const deleteBook = (id) => {
     try {
-        Axios.delete(`http://localhost:3006/delete/${id}`).then((response) => {
-          setBookList(
-            bookList.filter((val) => {
-              return val.id !== id;
-            })
-          );
-        });
+      Axios.delete(`http://localhost:3006/delete/${id}`).then((response) => {
+        setBookList(
+          bookList.filter((val) => {
+            return val.id !== id;
+          })
+        );
+      });
       // }
       setOpen(false);
     } catch (err) {
@@ -175,11 +179,25 @@ function App() {
         setEditedAuthor(editedAuthorObject);
         setEditedDescription(editedDescriptionObject);
       });
+
+      if (success) {
+        setTitle("");
+        setAuthor("");
+        setDescription("");
+      }
+      const timer = setTimeout(() => {
+        setSuccess(false);
+        setError(false);
+      }, 5000);
+
+      return () => {
+        clearTimeout(timer);
+      };
     } catch (err) {
       console.log(err);
       setError(true);
     }
-  }, []);
+  }, [success, error]);
 
   return (
     <>
@@ -218,10 +236,14 @@ function App() {
             />
           </Typography>
           {error && (
-            <Alert sx={{marginBottom: 2}} severity="error">Please fill in all fields!</Alert>
+            <Alert sx={{ marginBottom: 2 }} severity="error">
+              Please fill in all fields!
+            </Alert>
           )}
           {success && (
-            <Alert sx={{marginBottom: 2}} severity="success">Book added successfully!</Alert>
+            <Alert sx={{ marginBottom: 2 }} severity="success">
+              Book added successfully!
+            </Alert>
           )}
           <TextField
             sx={{ marginBottom: 2 }}
@@ -231,7 +253,9 @@ function App() {
             inputProps={{ maxLength: 20 }}
             required
             type="text"
+            value={title}
             onChange={(event) => setTitle(event.target.value)}
+            error={error && title === ""}
           />
           <TextField
             sx={{ marginBottom: 2 }}
@@ -241,7 +265,9 @@ function App() {
             inputProps={{ maxLength: 20 }}
             required
             type="text"
+            value={author}
             onChange={(event) => setAuthor(event.target.value)}
+            error={error && author === ""}
           />
           <TextField
             sx={{ marginBottom: 2 }}
@@ -254,8 +280,10 @@ function App() {
             inputProps={{ maxLength: 200 }}
             required
             type="text"
+            value={description}
             onChange={(event) => setDescription(event.target.value)}
             helperText={`Max ${description.length}/200 characters`}
+            error={error && description === ""}
           />
           <Button name="add" variant="contained" onClick={addBook}>
             Save New
@@ -349,10 +377,14 @@ function App() {
                           Description: {val.description}
                         </Typography>
                         {error && (
-                          <Alert sx={{marginBottom: 2}} severity="error">Please fill in all fields!</Alert>
+                          <Alert sx={{ marginBottom: 2 }} severity="error">
+                            Please fill in all fields!
+                          </Alert>
                         )}
                         {success && (
-                          <Alert sx={{marginBottom: 2}} severity="success">Book edited successfully!</Alert>
+                          <Alert sx={{ marginBottom: 2 }} severity="success">
+                            Book edited successfully!
+                          </Alert>
                         )}
                         <TextField
                           sx={{ marginBottom: 2 }}
@@ -434,7 +466,7 @@ function App() {
                           aria-labelledby="responsive-dialog-title"
                         >
                           <DialogTitle id="responsive-dialog-title">
-                            {`Are you sure you want to delete ${val.title} book?`}
+                            {`Are you sure you want to delete '${val.title}' book?`}
                           </DialogTitle>
                           <DialogContent>
                             <DialogContentText>
@@ -442,11 +474,14 @@ function App() {
                             </DialogContentText>
                           </DialogContent>
                           <DialogActions>
-                            <Button variant="contained" autoFocus onClick={handleClose}>
+                            <Button
+                              variant="contained"
+                              autoFocus
+                              onClick={handleClose}
+                            >
                               CANCEL
                             </Button>
                             <Button
-
                               variant="outlined"
                               onClick={() => {
                                 deleteBook(val.id);

@@ -18,7 +18,6 @@ app.post("/create", (req, res) => {
     const title = req.body.title;
     const author = req.body.author;
     const description = req.body.description;
-    console.log(typeof title);
     if (title == "" || author == "" || description == "") return;
     if (title.length > 20 || author.length > 20 || description.length > 200) {
       return;
@@ -46,6 +45,7 @@ app.get("/booklist", (req, res) => {
     db.query("SELECT * FROM employees", (err, result) => {
       if (err) {
         console.log(err);
+        res.send({ err: err });
       } else {
         res.send(result);
       }
@@ -70,6 +70,7 @@ app.put("/update", (req, res) => {
       (err, result) => {
         if (err) {
           console.log(err);
+          res.send({ err: err })
         } else {
           res.send(result);
         }
@@ -87,6 +88,7 @@ app.delete("/delete/:id", (req, res) => {
     db.query("DELETE FROM employees WHERE id = ?", id, (err, result) => {
       if (err) {
         console.log(err);
+        res.send({ err: err });
       } else {
         res.send(result);
       }
