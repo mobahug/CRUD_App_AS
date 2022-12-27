@@ -33,10 +33,6 @@ function App() {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -69,6 +65,20 @@ function App() {
       width: 40,
       height: 40,
     },
+  };
+
+  const [openId, setOpenId] = useState(0);
+
+  const handleClickOpen = (event) => {
+    const id = Number(event.target.id);
+    const item = selectedItems.find((item) => id === item);
+    console.log(item);
+    if (item) {
+      setOpen(true);
+      setOpenId(id);
+    } else {
+      console.log('no match found');
+    }
   };
 
   //sending values to the backend database
@@ -153,7 +163,6 @@ function App() {
           })
         );
       });
-      // }
       setOpen(false);
     } catch (err) {
       console.log(err);
@@ -376,16 +385,6 @@ function App() {
                         <Typography sx={{ marginBottom: 2 }}>
                           Description: {val.description}
                         </Typography>
-                        {error && (
-                          <Alert sx={{ marginBottom: 2 }} severity="error">
-                            Please fill in all fields!
-                          </Alert>
-                        )}
-                        {success && (
-                          <Alert sx={{ marginBottom: 2 }} severity="success">
-                            Book edited successfully!
-                          </Alert>
-                        )}
                         <TextField
                           sx={{ marginBottom: 2 }}
                           fullWidth
@@ -438,7 +437,9 @@ function App() {
                               [val.id]: event.target.value,
                             });
                           }}
-                          helperText="Max 200 characters"
+                          helperText={`Max ${
+                            editedDescription[val.id].length
+                          }/200 characters`}
                         />
                         <Button
                           sx={{ marginBottom: 2 }}
@@ -452,6 +453,7 @@ function App() {
                           Save
                         </Button>
                         <Button
+                          id={val.id}
                           sx={{ marginBottom: 2 }}
                           fullWidth
                           variant="outlined"
@@ -459,6 +461,7 @@ function App() {
                         >
                           Delete
                         </Button>
+                        {val.id === openId && (
                         <Dialog
                           fullScreen={fullScreen}
                           open={open}
@@ -490,7 +493,7 @@ function App() {
                               DELETE
                             </Button>
                           </DialogActions>
-                        </Dialog>
+                        </Dialog>)}
                       </Box>
                     </Fade>
                   )}
