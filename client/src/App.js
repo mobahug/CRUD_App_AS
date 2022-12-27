@@ -72,19 +72,19 @@ function App() {
   const handleClickOpen = (event) => {
     const id = Number(event.target.id);
     const item = selectedItems.find((item) => id === item);
-    console.log(item);
     if (item) {
       setOpen(true);
       setOpenId(id);
     } else {
       console.log('no match found');
+      return;
     }
   };
 
   //sending values to the backend database
   const addBook = () => {
     try {
-      Axios.post("http://localhost:3006/create", {
+      Axios.post("http://localhost:3007/create", {
         title: title,
         author: author,
         description: description,
@@ -128,7 +128,7 @@ function App() {
 
   const updateBook = (id) => {
     try {
-      Axios.put("http://localhost:3006/update", {
+      Axios.put("http://localhost:3007/update", {
         title: edited[id],
         author: editedAuthor[id],
         description: editedDescription[id],
@@ -156,7 +156,7 @@ function App() {
 
   const deleteBook = (id) => {
     try {
-      Axios.delete(`http://localhost:3006/delete/${id}`).then((response) => {
+      Axios.delete(`http://localhost:3007/delete/${id}`).then((response) => {
         setBookList(
           bookList.filter((val) => {
             return val.id !== id;
@@ -171,7 +171,7 @@ function App() {
 
   useEffect(() => {
     try {
-      Axios.get("http://localhost:3006/booklist").then((response) => {
+      Axios.get("http://localhost:3007/booklist").then((response) => {
         setBookList(response.data);
 
         const editedObject = {};
