@@ -25,6 +25,19 @@
 
 ![ezgif com-gif-maker (6)](https://user-images.githubusercontent.com/83179142/209777971-c6eb7f27-c344-47e5-bdcc-f50da1438c67.gif)
 
+## Features
+
+    - Add books,
+    - List books,
+    - Show more switcher,
+    - Update books,
+    - Success/Error message 5s,
+    - Delete Dialog Pop-up Box,
+    - Mobile friendly,
+    - Input clear after submit,
+    - Input error mark individually
+    
+
 ## How to use it
 
   After cloning the repository execute on the root folder the following command:
