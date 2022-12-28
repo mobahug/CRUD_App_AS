@@ -29,8 +29,9 @@
 
     - Add books,
     - List books,
-    - Show more switcher,
     - Update books,
+    - Delete books,
+    - Show more switcher,
     - Success/Error message 5s,
     - Delete Dialog Pop-up Box,
     - Mobile friendly,
