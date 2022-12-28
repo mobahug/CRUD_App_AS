@@ -1,4 +1,4 @@
-# Buutti Assignment challenge
+# CRUD App Challenge
 
 ## Task:
 
