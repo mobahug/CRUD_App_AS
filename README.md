@@ -22,10 +22,9 @@
     7. The application (front and backend) can be started with a single command in terminal
 
 ![ezgif com-gif-maker (4)](https://user-images.githubusercontent.com/83179142/209777536-af919a26-ebc6-4012-a997-230b03879855.gif)
+![ezgif com-gif-maker (6)](https://user-images.githubusercontent.com/83179142/209777971-c6eb7f27-c344-47e5-bdcc-f50da1438c67.gif)
 
 ![ezgif com-gif-maker (5)](https://user-images.githubusercontent.com/83179142/209777677-8fe06654-ba58-4394-bf99-5f3c05556781.gif)
-
-<img width="400em"src="https://user-images.githubusercontent.com/83179142/209777677-8fe06654-ba58-4394-bf99-5f3c05556781.gif"/>
 
 ## How to use it
 
