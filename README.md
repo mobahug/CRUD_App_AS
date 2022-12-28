@@ -51,7 +51,7 @@ Open the browser with the following URL:
       http://localhost:3000/
 
 
-### Installation documentation:
+### Installation package documentation:
 
     npm create-react-app
     npm install node
