@@ -46,10 +46,12 @@
     make start
 
 
-Open the browser with the following URL:
+  Open the browser with the following URL:
 
       http://localhost:3000/
-
+      
+  For the database I used MySQL Workbranch with default credentials and created there a new schema with a table.
+  !Note that have to set up for yourself!
 
 ### Installation package documentation:
 
