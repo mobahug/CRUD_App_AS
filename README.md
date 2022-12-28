@@ -25,6 +25,8 @@
 
 ![ezgif com-gif-maker (5)](https://user-images.githubusercontent.com/83179142/209777677-8fe06654-ba58-4394-bf99-5f3c05556781.gif)
 
+<img width="400em"src="https://user-images.githubusercontent.com/83179142/209777677-8fe06654-ba58-4394-bf99-5f3c05556781.gif"/>
+
 ## How to use it
 
   After cloning the repository
